@@ -21,5 +21,5 @@ Documentation at Read the Docs (pending)
 Copyright (c) Brian Skinn 2017
 
 License: The MIT License  
-See [`LICENSE.txt`](https://github.com/bskinn/mwfn-fu/blob/master/LICENSE.txt) for full license terms.
+See `LICENSE.txt <https://github.com/bskinn/mwfn-fu/blob/master/LICENSE.txt>`__ for full license terms.
 
