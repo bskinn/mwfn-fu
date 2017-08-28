@@ -18,4 +18,8 @@ Documentation at Read the Docs (pending)
     :target: http://h5cube.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+Copyright (c) Brian Skinn 2017
+
+License: The MIT License  
+See [`LICENSE.txt`](https://github.com/bskinn/mwfn-fu/blob/master/LICENSE.txt) for full license terms.
 
