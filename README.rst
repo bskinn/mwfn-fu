@@ -12,7 +12,7 @@ Eventually will be available on PyPI.
 Source on `GitHub <https://github.com/bskinn/mwfn-fu>`__
 (CHANGELOG pending).
 
-Documentation at Read the Docs (pending)
+Documentation at Read the Docs (pending).
 
 .. x image:: https://readthedocs.org/projects/h5cube/badge/?version=latest
     :target: http://h5cube.readthedocs.io/en/latest/?badge=latest
@@ -20,6 +20,6 @@ Documentation at Read the Docs (pending)
 
 Copyright (c) Brian Skinn 2017
 
-License: The MIT License  
-See `LICENSE.txt <https://github.com/bskinn/mwfn-fu/blob/master/LICENSE.txt>`__ for full license terms.
+License: The MIT License. See
+`LICENSE.txt <https://github.com/bskinn/mwfn-fu/blob/master/LICENSE.txt>`__ for full license terms.
 
