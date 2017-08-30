@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# Name:        __init__
+# Name:        __init__.py
 # Purpose:     Package information for mwfn_fu
 #
 # Author:      Brian Skinn
@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import
 
-
+from .driver import MultiwfnDriver
 
 __version__ = '0.0'
 
