@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name='mwfn_fu',
-    version='0.1',
+    version='0.0',
     provides=['mwfn_fu'],
     install_requires=['sarge', 'psutil'],
     packages=['mwfn_fu'],
