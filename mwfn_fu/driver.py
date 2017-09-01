@@ -90,8 +90,7 @@ class MultiwfnDriver(object):
         return False
 
 
-    def shutdown(self):
-        self.await_idle()
+    def shutdown(self, force=False):
         self.pipeline.commands[0].terminate()
 
 
