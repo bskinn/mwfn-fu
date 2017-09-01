@@ -9,7 +9,7 @@ setup(
     name='mwfn_fu',
     version='0.0',
     provides=['mwfn_fu'],
-    install_requires=['sarge', 'psutil'],
+    install_requires=['attrs', 'psutil', 'sarge'],
     packages=['mwfn_fu'],
     url='https://www.github.com/bskinn/mwfn-fu',
     license='MIT License',
