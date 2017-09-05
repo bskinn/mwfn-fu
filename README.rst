@@ -12,7 +12,7 @@ Eventually will be available on PyPI.
 Source on `GitHub <https://github.com/bskinn/mwfn-fu>`__
 (CHANGELOG pending).
 
-Documentation at Read the Docs (pending).
+Documentation at `Read the Docs <http://mwfn-fu.readthedocs.io/en/latest/>`__.
 
 .. x image:: https://readthedocs.org/projects/h5cube/badge/?version=latest
     :target: http://h5cube.readthedocs.io/en/latest/?badge=latest
