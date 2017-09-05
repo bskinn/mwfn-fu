@@ -183,7 +183,7 @@ class MultiwfnDriver(object):
         """
 
         import psutil
-        from time import sleep
+        from time import sleep, strftime
 
         # Function to update the count-history lists
         def ct_update(p, l, h):
@@ -214,7 +214,8 @@ class MultiwfnDriver(object):
             # Print status info if indicated (PROBABLY CONVERT TO AND/OR AUGMENT WITH
             #  LOGGING, EVENTUALLY?)
             if print_status:
-                print('{0} -- {1}'.format(
+                print('({0}) {1} -- {2}'.format(
+                        strftime('%Y-%m-%d %H:%M:%S'), 
                         [actual_cpu, ct_lengths, (actual_cpu >= idle_cpu or ct_lengths[0] > ct_lengths[1])],
                         self.pipeline.stdout.text[-200:].splitlines()[-1]))
 
