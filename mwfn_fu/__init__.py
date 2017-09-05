@@ -15,7 +15,10 @@
 
 """
 
-*Sphinx autodoc stuff to go here*
+Base of ``mwfn_fu`` package
+
+.. autoclass:: MultiwfnDriver
+    :members:
 
 
 """

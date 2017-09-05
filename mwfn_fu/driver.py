@@ -16,7 +16,7 @@
 import attr
 
 
-def _validate_mwfn_path(md, at, val):
+def _validate_mwfn_path(_, __, val):
     import os.path as osp
 
     if not osp.isdir(val):
@@ -26,7 +26,7 @@ def _validate_mwfn_path(md, at, val):
         raise FileNotFoundError('Multiwfn.exe not found within indicated directory')
 
 
-def _validate_data_fname(md, at, val):
+def _validate_data_fname(_, __, val):
     import os.path as osp
 
     if not osp.isfile(val):
@@ -35,33 +35,54 @@ def _validate_data_fname(md, at, val):
 
 @attr.s()
 class MultiwfnDriver(object):
-    """Handles all execution/input/output of a Multiwfn instance."""
+    """Handles all execution/input/output of a Multiwfn instance.
 
-    import re
+    MultiwfnDriver is configured to function as a context manager,
+    **RESUME**
+
+    .. automethod:: __init__
+
+    """
+
+    import re as _re
 
     # Regex for finding the `isilent` settings in `settings.ini`
-    p_isilent = re.compile('isilent= ([01])')
-    p_nthreads = re.compile('nthreads= (\\d+)')
-    p_data_fname = re.compile('^\\s*Loaded (.*) successfully!\\s*$', re.I | re.M)
+    p_isilent = _re.compile('isilent= ([01])')
+    p_nthreads = _re.compile('nthreads= (\\d+)')
+    p_data_fname = _re.compile('^\\s*Loaded (.*) successfully!\\s*$', _re.I | _re.M)
 
     # Useful constants
+    #: Default name of the Multiwfn settings file (valid for v3.3.7, at minimum)
     SETTINGS_FILE = 'settings.ini'
+
+    #: Default name of the Multiwfn executable (valid for v3.3., at minimum)
     EXECUTABLE = 'multiwfn.exe'
+
+    #: Default "short" wait time
     WAIT_SHORT = 0.25
+
+    #: Default "medium" wait time
     WAIT_MED = 1.0
+
+    #: Default "long" wait time
     WAIT_LONG = 2.5
 
     # Add attr.ib's
+    #: Path to Multiwfn installation directory
     mwfn_path = attr.ib(convert=str, validator=_validate_mwfn_path)
+
+    #: Full path of the data file to be read into Multiwfn
     data_fname = attr.ib(convert=str, validator=_validate_data_fname)
+
+    #: :obj:`bool` indicating whether to suppress GUI components
+    #: of Multiwfn for, e.g., applications with scripted execution
     suppress_gui = attr.ib(convert=bool, default=True)
 
-    def __attrs_post_init__(self): #, mwfn_path, data_fname, suppress_gui=True):
-
-        from time import sleep
+    def __attrs_post_init__(self):
+        """Initialization performed after attr.ib setup."""
 
         # Launch Multiwfn; method binds the Feeder and the Pipeline
-        self.launch(self.mwfn_path, self.suppress_gui)
+        self.launch(self.mwfn_path)
 
         # Store the PID
         self.pid = self.pipeline.commands[0].process.pid
@@ -80,21 +101,17 @@ class MultiwfnDriver(object):
         self.execute(self.data_fname + '\n')
         self.data_fname = self.p_data_fname.search(self.pipeline.stdout.text).group(1)
 
-
     def __enter__(self):
         return self
-
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.shutdown()
         return False
 
-
-    def shutdown(self, force=False):
+    def shutdown(self):
         self.pipeline.commands[0].terminate()
 
-
-    def launch(self, mwfn_path, datafile, suppress_gui=True):
+    def launch(self, mwfn_path, suppress_gui=True):
 
         import os
         import psutil
@@ -120,8 +137,10 @@ class MultiwfnDriver(object):
 
         # Execute, binding all needed input/output streams
         self.feeder = sarge.Feeder()
-        self.pipeline = sarge.run(self.EXECUTABLE, input=self.feeder, async=True,
-                stdout=sarge.Capture(buffer_size=1), stderr=sarge.Capture(buffer_size=1))
+        self.pipeline = sarge.run(self.EXECUTABLE, input=self.feeder,
+                                  async=True,
+                                  stdout=sarge.Capture(buffer_size=1),
+                                  stderr=sarge.Capture(buffer_size=1))
 
         # Store the nthreads, nproc, 'idle' CPU level
         # Idle level is 10% of the max CPU level based on (# threads / # CPUs)
@@ -183,13 +202,13 @@ class MultiwfnDriver(object):
         """
 
         import psutil
-        from time import sleep, strftime
+        from time import strftime
 
         # Function to update the count-history lists
         def ct_update(p, l, h):
-            l.pop()                         # Remove last value
-            l.insert(0, len(p.stdout.text)) # Insert current count
-            h.append(l[:])                  # Add updated value to history
+            l.pop()                             # Remove last value
+            l.insert(0, len(p.stdout.text))     # Insert current count
+            h.append(l[:])                      # Add updated value to history
 
         # Assign default idle CPU level if needed
         if idle_cpu is None:
@@ -215,13 +234,13 @@ class MultiwfnDriver(object):
             #  LOGGING, EVENTUALLY?)
             if print_status:
                 print('({0}) {1} -- {2}'.format(
-                        strftime('%Y-%m-%d %H:%M:%S'), 
-                        [actual_cpu, ct_lengths, (actual_cpu >= idle_cpu or ct_lengths[0] > ct_lengths[1])],
+                        strftime('%Y%m%d %H%M%S'),
+                        [round(actual_cpu, 2), ct_lengths,
+                         (actual_cpu >= idle_cpu or ct_lengths[0] > ct_lengths[1])],
                         self.pipeline.stdout.text[-200:].splitlines()[-1]))
 
         # Return the history (MAY NEED TO IMPROVE THIS?)
         return ct_history
-
 
     def execute(self, command, *, idle_cpu=None, print_status=False, poll_time=0.25):
         """Submit a command to the child Multiwfn instance and wait for computation to complete"""
@@ -247,4 +266,3 @@ class MultiwfnDriver(object):
             return self.pipeline.stdout.text
         else:
             return self.pipeline.stdout.text[slice(*self.output_spans[index])]
-

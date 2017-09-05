@@ -436,5 +436,16 @@ epub_exclude_files = ['search.html']
 # epub_use_index = True
 
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+# Customized intersphinx pull
+isphx_local = os.environ.get('ISPHX_LOCAL')
+isphx_objpath = os.path.join('isphx', '{0}')
+isphx_objstr = 'objects_{0}.inv'
+
+
+def isphx_subst(s):
+    return isphx_objpath.format(isphx_objstr.format(s)) if isphx_local else None
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3.5', isphx_subst('python')),
+    'sarge': ('http://sarge.readthedocs.io/en/latest/', isphx_subst('sarge'))
+    }

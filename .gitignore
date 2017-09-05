@@ -55,6 +55,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# PyCharm
+.idea/*
+
 # PyBuilder
 target/
 
@@ -63,4 +66,7 @@ target/
 
 #NoteTab Light backup files
 *.bak
+
+# Local cache of objects.inv files
+doc/source/isphx/*
 
